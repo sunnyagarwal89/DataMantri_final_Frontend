@@ -17,6 +17,7 @@ import {
   mockOrganizations,
   mockRoles,
   mockUsers,
+  mockSchedulers,
 } from './mockData';
 
 // Simulate network delay
@@ -426,6 +427,47 @@ class MockApiService {
       rows_imported: Math.floor(Math.random() * 10000) + 1000,
       table_name: config.table_name || file.name.replace(/\.[^/.]+$/, ''),
     };
+  }
+
+  // Schedulers
+  async getSchedulers() {
+    await delay(300);
+    return mockSchedulers;
+  }
+
+  async getScheduler(id: string) {
+    await delay(200);
+    const scheduler = mockSchedulers.find(s => s.id === id);
+    if (!scheduler) {
+      throw new Error('Scheduler not found');
+    }
+    return scheduler;
+  }
+
+  async createScheduler(data: any) {
+    await delay(500);
+    return {
+      id: String(mockSchedulers.length + 1),
+      ...data,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      last_run: null,
+      next_run: new Date(Date.now() + 3600000).toISOString(),
+    };
+  }
+
+  async updateScheduler(id: string, data: any) {
+    await delay(400);
+    const scheduler = mockSchedulers.find(s => s.id === id);
+    if (!scheduler) {
+      throw new Error('Scheduler not found');
+    }
+    return { ...scheduler, ...data };
+  }
+
+  async deleteScheduler(id: string) {
+    await delay(300);
+    return { success: true, message: 'Scheduler deleted successfully' };
   }
 }
 
